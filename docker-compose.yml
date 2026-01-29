@@ -1,0 +1,29 @@
+networks:
+  n8n-internal:
+    external: false
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    restart: always
+    ports:
+      - "5678:5678"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/home/node/.n8n
+      - /Users/max/n8n-data:/files/data
+    depends_on:
+      - postgres
+    networks:
+      - n8n-internal
+
+  postgres:
+    image: postgres:15
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - n8n-internal
