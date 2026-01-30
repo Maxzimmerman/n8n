@@ -12,7 +12,7 @@ services:
       - .env
     volumes:
       - ./data:/home/node/.n8n
-      - /Users/max/n8n-data:/files/data
+      - /Users/max/Documents/Documents - Max's MacBook Pro/Private/scan_n8n:/home/node/.n8n-files
     depends_on:
       - postgres
     networks:
