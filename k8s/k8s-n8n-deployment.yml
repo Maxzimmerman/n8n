@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n8n-deployment
+  namespace: n8n-namespace
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app/n8n: n8n
+  template:
+    metadata:
+      labels:
+        app/n8n: n8n
+    spec:
+      containers:
+      - name: n8n-container
+        image: n8nio/n8n:latest
+        imagePullPolicy: Always
+        env:
+          - name: N8N_TASK_RUNNER_MODE
+            value: "queue"
+          - name: DB_TYPE
+            value: postgresdb
+          - name: DB_POSTGRESDB_HOST
+            value: postgres-service
+          - name: DB_POSTGRESDB_PORT
+            value: "5432"
+          - name: DB_POSTGRESDB_DATABASE
+            value: n8n
+          - name: DB_POSTGRESDB_USER
+            value: n8n
+          - name: DB_POSTGRESDB_PASSWORD
+            value: changeme123
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"
+          requests:
+            memory: "256Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 5678
+        volumeMounts:
+          - name: n8n-config
+            mountPath: /home/node/.n8n/
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5678
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      volumes:
+        - name: n8n-config
+          persistentVolumeClaim:
+            claimName: n8n-config-pvc
