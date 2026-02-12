@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: n8n-pod
+  namespace: n8n-namespace
+  labels:
+    app/n8n: n8n
+spec:
+  containers:
+  - name: n8n-container
+    image: n8nio/n8n:latest
+    env:
+      - name: N8N_TASK_RUNNER_MODE
+        value: "queue"
+      # When n8n starts:
+      # It reads DB_POSTGRESDB_HOST=postgres-service
+      # It tries to connect to postgres-service:5432
+      # Kubernetes DNS resolves postgres-service → the service IP
+      # The service routes the connection to the postgres pod
+      - name: DB_TYPE
+        value: postgresdb
+      - name: DB_POSTGRESDB_HOST
+        value: postgres-service
+      - name: DB_POSTGRESDB_PORT
+        value: "5432"
+      - name: DB_POSTGRESDB_DATABASE
+        value: n8n
+      - name: DB_POSTGRESDB_USER
+        value: n8n
+      - name: DB_POSTGRESDB_PASSWORD
+        value: changeme123
+    resources:
+      limits:
+        memory: "512Mi"
+        cpu: "1000m"
+      requests:
+        memory: "256Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 5678
+    volumeMounts:
+      - name: n8n-config
+        mountPath: /home/node/.n8n/
+  volumes:
+    - name: n8n-config
+      persistentVolumeClaim:
+        claimName: n8n-config-pvc
