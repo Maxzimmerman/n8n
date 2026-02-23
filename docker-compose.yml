@@ -28,14 +28,14 @@ services:
     networks:
       - n8n-internal
   
-  nginx:
-    image: nginx:alpine
-    container_name: n8n-nginx-container_name
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    ports:
-      - 80:80
-    depends_on:
-      - n8n
-    networks:
-      - n8n-internal
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: n8n-nginx-container_name
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #   ports:
+  #     - 80:80
+  #   depends_on:
+  #     - n8n
+  #   networks:
+  #     - n8n-internal
