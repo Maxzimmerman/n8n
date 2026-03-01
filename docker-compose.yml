@@ -27,7 +27,17 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
     networks:
       - n8n-internal
-  
+
+  ollama:
+    image: ollama/ollama:latest
+    restart: always
+    volumes:
+      - ./ollama-data:/root/.ollama 
+    ports:
+      - "11434:11434"
+    networks:
+      - n8n-internal
+    
   # nginx:
   #   image: nginx:alpine
   #   container_name: n8n-nginx-container_name
