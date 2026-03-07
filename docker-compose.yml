@@ -7,12 +7,12 @@ services:
     image: n8nio/n8n:latest
     restart: always
     ports:
-      - "5678:5678"
+      - "127.0.0.1:5678:5678"
     env_file:
       - .env
     volumes:
       - ./data:/home/node/.n8n
-      - /Users/max/Documents/Documents - Max's MacBook Pro/Private/scan_n8n:/home/node/.n8n-files
+      - /Users/miniserver/Documents/scans:/home/node/.n8n-files
     depends_on:
       - postgres
     networks:
